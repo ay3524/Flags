@@ -1,4 +1,4 @@
-package ay3524.com.flags;
+package ay3524.com.flags.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
+import ay3524.com.flags.R;
 import ay3524.com.flags.model.Worldpopulation;
 
 /**

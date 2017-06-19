@@ -1,5 +1,6 @@
-package ay3524.com.flags;
+package ay3524.com.flags.ui;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,15 +8,20 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import ay3524.com.flags.utils.ApiInterface;
+import ay3524.com.flags.utils.Constants;
+import ay3524.com.flags.R;
+import ay3524.com.flags.adapter.WorldFlagAdapter;
 import ay3524.com.flags.model.WorldData;
+import ay3524.com.flags.model.Worldpopulation;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -24,7 +30,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity implements WorldFlagAdapter.ClickListener {
+public class MainActivity extends AppCompatActivity implements WorldFlagAdapter.ClickListener, View.OnClickListener {
 
     GridLayoutManager layoutManager;
     WorldFlagAdapter adapter;
@@ -32,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements WorldFlagAdapter.
     RelativeLayout emptyView;
     Button retryButton;
     ProgressBar progressBar;
+    ArrayList<Worldpopulation> worldata, savedWorldData;
+    private static final String STATE_SAVE = "state_save";
+    int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +52,11 @@ public class MainActivity extends AppCompatActivity implements WorldFlagAdapter.
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         emptyView = (RelativeLayout) findViewById(R.id.empty_view);
         retryButton = (Button) findViewById(R.id.retry);
+        retryButton.setOnClickListener(this);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
 
+        // Setting up the RecyclerView for LANDSCAPE AND PORTRAIT.
+        // LANDSCAPE VERSION SHOWS TWO FLAGS IN A ROW AND PORTRAIT VERSION HAS THREE.
         recyclerView.setHasFixedSize(true);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             layoutManager = new GridLayoutManager(getApplicationContext(), 2);
@@ -54,31 +66,39 @@ public class MainActivity extends AppCompatActivity implements WorldFlagAdapter.
             recyclerView.setLayoutManager(layoutManager);
         }
 
-        checkInternetAndRequest();
-
-        retryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               if(!checkInternetAndRequest()){
-                   Toast.makeText(MainActivity.this, "Still No Internet Connection!", Toast.LENGTH_SHORT).show();
-               }
-            }
-        });
+        // Using savedInstanceState to handle configuration change
+        if (savedInstanceState != null && Constants.isConnected(getApplicationContext())) {
+            savedWorldData = savedInstanceState.getParcelableArrayList(STATE_SAVE);
+            adapter = new WorldFlagAdapter(savedWorldData, getApplicationContext());
+            adapter.setClickListener(MainActivity.this);
+            recyclerView.setAdapter(adapter);
+            count = 1;
+        } else {
+            checkInternetAndRequest();
+        }
     }
 
+    /**
+     * This method is used for checking Internet Connection and performing Network request
+     * Shows a proper error message if Internet Connection not available.
+     */
     private boolean checkInternetAndRequest() {
-        if(Constants.isConnected(getApplicationContext())){
+        if (Constants.isConnected(getApplicationContext())) {
             progressBar.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
             performNetworkRequest();
             return true;
-        }else{
+        } else {
             emptyView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
             return false;
         }
     }
 
+    /**
+     * This method is used for the network request using Retrofit Library.
+     * After calling Retrofit this function calls Observer to fetch images of flags.
+     */
     private void performNetworkRequest() {
         Retrofit retrofit = new Retrofit.Builder()
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -86,15 +106,27 @@ public class MainActivity extends AppCompatActivity implements WorldFlagAdapter.
                 .baseUrl(Constants.BASE_URI)
                 .build();
 
-        WorldService weatherService = retrofit.create(WorldService.class);
-        Observable<WorldData> data = weatherService.getWorldData();
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+
+        performObserverRequest(apiInterface);
+
+    }
+
+    /**
+     * This method is used for performing Observer Request using RxJava.
+     *
+     * @param apiInterface - using the retrofit fetching interface for Observer.
+     */
+    private void performObserverRequest(ApiInterface apiInterface) {
+
+        Observable<WorldData> data = apiInterface.getWorldData();
 
         data.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<WorldData>() {
                     @Override
                     public final void onCompleted() {
-                        // Disable the progressbar
+                        // Disabling the progressbar after complete network request.
                         progressBar.setVisibility(View.GONE);
                     }
 
@@ -106,8 +138,8 @@ public class MainActivity extends AppCompatActivity implements WorldFlagAdapter.
 
                     @Override
                     public final void onNext(WorldData response) {
-                        Toast.makeText(MainActivity.this,response.getWorldpopulation().get(0).getCountry() , Toast.LENGTH_SHORT).show();
-                        //mCardAdapter.addData(response);
+                        worldata = response.getWorldpopulation();
+                        Toast.makeText(MainActivity.this, response.getWorldpopulation().get(0).getCountry(), Toast.LENGTH_SHORT).show();
                         adapter = new WorldFlagAdapter(response.getWorldpopulation(), getApplicationContext());
                         adapter.setClickListener(MainActivity.this);
                         recyclerView.setAdapter(adapter);
@@ -116,30 +148,35 @@ public class MainActivity extends AppCompatActivity implements WorldFlagAdapter.
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (count == 1) {
+            outState.putParcelableArrayList(STATE_SAVE, savedWorldData);
+        } else {
+            outState.putParcelableArrayList(STATE_SAVE, worldata);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onItemClick(View v, int pos) {
+        Worldpopulation worldpopulation = worldata.get(pos);
+        String flagImageUrl = worldpopulation.getFlag();
+        String rank = String.valueOf(worldpopulation.getRank());
+        String country = worldpopulation.getCountry();
+        String population = worldpopulation.getPopulation();
 
+        Intent i = new Intent(getApplicationContext(), FlagDetail.class);
+        i.putExtra("FLAG_URL", flagImageUrl);
+        i.putExtra("RANK", rank);
+        i.putExtra("COUNTRY", country);
+        i.putExtra("POPULATION", population);
+        startActivity(i);
+    }
 
+    @Override
+    public void onClick(View v) {
+        if (!checkInternetAndRequest()) {
+            Toast.makeText(MainActivity.this, "Still No Internet Connection!", Toast.LENGTH_SHORT).show();
+        }
     }
 }

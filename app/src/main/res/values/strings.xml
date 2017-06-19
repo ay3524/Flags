@@ -3,4 +3,10 @@
     <string name="action_settings">Settings</string>
     <string name="flag">flag</string>
     <string name="errorimage">Error Image</string>
+    <string name="title_activity_flag_detail">FlagDetail</string>
+    
+    <string name="rank_placeholder">Rank : %1$s</string>
+    <string name="country_placeholder">Country : %1$s</string>
+    <string name="population_placeholder">Population : %1$s</string>
+
 </resources>
