@@ -16,8 +16,4 @@ public class WorldData {
         return worldpopulation;
     }
 
-    public void setWorldpopulation(ArrayList<Worldpopulation> worldpopulation) {
-        this.worldpopulation = worldpopulation;
-    }
-
 }

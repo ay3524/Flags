@@ -1,3 +1,9 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="image_detail_width_dimen">300dp</dimen>
+    <dimen name="image_detail_height_dimen">180dp</dimen>
+    <dimen name="image_detail_margin">10dp</dimen>
+    <dimen name="retry_button_margin">10dp</dimen>
+    <dimen name="grid_image_height">110dp</dimen>
+    <dimen name="grid_image_margin">5dp</dimen>
 </resources>

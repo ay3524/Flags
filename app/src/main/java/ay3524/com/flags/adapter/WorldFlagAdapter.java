@@ -44,17 +44,9 @@ public class WorldFlagAdapter extends RecyclerView.Adapter<WorldFlagAdapter.View
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         String flagUrl = itemsModels.get(position).getFlag();
-        //Glide.clear(holder.image);
         Glide.with(context)
                 .load(flagUrl)
-                //.placeholder(R.drawable.icon)
-                //.error(R.drawable.icon)
-                //.diskCacheStrategy(DiskCacheStrategy.ALL)
-                //.dontAnimate()
                 .into(holder.image);
-
-        //holder.title.setText(itemsModels.get(position).getTitle());
-
     }
 
     @Override
@@ -62,11 +54,11 @@ public class WorldFlagAdapter extends RecyclerView.Adapter<WorldFlagAdapter.View
         return itemsModels == null ? 0 : itemsModels.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         View view;
         ImageView image;
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             this.view = itemView;

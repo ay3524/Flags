@@ -9,6 +9,6 @@ import rx.Observable;
  */
 
 public interface ApiInterface {
-    @GET("jsonparsetutorial.txt")
+    @GET(Constants.GET_JSON_PAGE_TEXT)
     Observable<WorldData> getWorldData();
 }

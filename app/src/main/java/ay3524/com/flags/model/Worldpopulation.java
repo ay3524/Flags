@@ -7,18 +7,20 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import ay3524.com.flags.utils.Constants;
+
 public class Worldpopulation implements Parcelable {
 
-    @SerializedName("rank")
+    @SerializedName(Constants.JSON_KEY_RANK)
     @Expose
     private int rank;
-    @SerializedName("country")
+    @SerializedName(Constants.JSON_KEY_COUNTRY)
     @Expose
     private String country;
-    @SerializedName("population")
+    @SerializedName(Constants.JSON_KEY_POPULATION)
     @Expose
     private String population;
-    @SerializedName("flag")
+    @SerializedName(Constants.JSON_KEY_FLAG)
     @Expose
     private String flag;
 
@@ -26,33 +28,21 @@ public class Worldpopulation implements Parcelable {
         return rank;
     }
 
-    public void setRank(int rank) {
-        this.rank = rank;
-    }
 
     public String getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
 
     public String getPopulation() {
         return population;
     }
 
-    public void setPopulation(String population) {
-        this.population = population;
-    }
 
     public String getFlag() {
         return flag;
     }
 
-    public void setFlag(String flag) {
-        this.flag = flag;
-    }
 
     @Override
     public int describeContents() {
@@ -67,10 +57,8 @@ public class Worldpopulation implements Parcelable {
         dest.writeString(this.flag);
     }
 
-    public Worldpopulation() {
-    }
 
-    protected Worldpopulation(Parcel in) {
+    private Worldpopulation(Parcel in) {
         this.rank = in.readInt();
         this.country = in.readString();
         this.population = in.readString();

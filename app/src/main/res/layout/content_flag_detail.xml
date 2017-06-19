@@ -8,38 +8,38 @@
     tools:context="ay3524.com.flags.ui.FlagDetail"
     tools:showIn="@layout/activity_flag_detail">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/flag_image"
+        android:layout_width="@dimen/image_detail_width_dimen"
+        android:layout_height="@dimen/image_detail_height_dimen"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/image_detail_margin"
+        android:background="@drawable/border"
+        android:scaleType="fitXY" />
+
+    <TextView
+        android:id="@+id/rank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/flag_image"
         android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:textColor="@android:color/black" />
 
-        <ImageView
-            android:scaleType="fitXY"
-            android:layout_gravity="center"
-            android:background="@drawable/border"
-            android:id="@+id/flag_image"
-            android:layout_width="250dp"
-            android:layout_height="125dp"
-            android:layout_margin="10dp" />
+    <TextView
+        android:id="@+id/country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rank"
+        android:layout_centerInParent="true"
+        android:textColor="@android:color/black" />
 
-        <TextView
-            android:layout_marginLeft="10dp"
-            android:id="@+id/rank"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:layout_marginLeft="10dp"
-            android:id="@+id/country"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:layout_marginLeft="10dp"
-            android:id="@+id/population"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/population"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/country"
+        android:layout_centerInParent="true"
+        android:textColor="@android:color/black" />
 
 </RelativeLayout>

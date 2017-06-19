@@ -43,7 +43,7 @@
             android:layout_below="@+id/empty_shelter_image"
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif-medium"
-            android:text="It's a bit lonely here"
+            android:text="@string/it_s_a_bit_lonely_here"
             android:textAppearance="?android:textAppearanceMedium"/>
 
         <TextView
@@ -53,13 +53,13 @@
             android:layout_below="@+id/empty_title_text"
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif"
-            android:text="Try retrying when connected to Internet"
+            android:text="@string/try_retrying_when_connected_to_internet"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="#000"/>
+            android:textColor="@android:color/black"/>
         <Button
             android:id="@+id/retry"
-            android:layout_marginTop="10dp"
-            android:text="Retry"
+            android:layout_marginTop="@dimen/retry_button_margin"
+            android:text="@string/retry"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/empty_subtitle_text"
             android:layout_width="wrap_content"
