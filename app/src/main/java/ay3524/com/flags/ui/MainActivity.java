@@ -139,7 +139,6 @@ public class MainActivity extends AppCompatActivity implements WorldFlagAdapter.
                     @Override
                     public final void onNext(WorldData response) {
                         worldata = response.getWorldpopulation();
-                        Toast.makeText(MainActivity.this, response.getWorldpopulation().get(0).getCountry(), Toast.LENGTH_SHORT).show();
                         adapter = new WorldFlagAdapter(response.getWorldpopulation(), getApplicationContext());
                         adapter.setClickListener(MainActivity.this);
                         recyclerView.setAdapter(adapter);
