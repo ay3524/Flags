@@ -11,5 +11,6 @@
     <string name="it_s_a_bit_lonely_here">It\'s a bit lonely here</string>
     <string name="try_retrying_when_connected_to_internet">Try retrying when connected to Internet</string>
     <string name="retry">Retry</string>
+    <string name="toast_error_network">Still No Internet Connection!</string>
 
 </resources>

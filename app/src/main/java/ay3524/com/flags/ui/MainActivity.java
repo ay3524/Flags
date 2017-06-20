@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements WorldFlagAdapter.
     ProgressBar progressBar;
     ArrayList<Worldpopulation> worldata, savedWorldData;
     private static final String STATE_SAVE = "state_save";
+    private static final String LOG_ERROR_TAG = "Error World Data App";
     int count;
 
     @Override
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements WorldFlagAdapter.
 
                     @Override
                     public final void onError(Throwable e) {
-                        Log.e("Error World Data App", e.getMessage());
+                        Log.e(LOG_ERROR_TAG, e.getMessage());
                         progressBar.setVisibility(View.GONE);
                     }
 
@@ -165,17 +166,17 @@ public class MainActivity extends AppCompatActivity implements WorldFlagAdapter.
         String population = worldpopulation.getPopulation();
 
         Intent i = new Intent(getApplicationContext(), FlagDetail.class);
-        i.putExtra("FLAG_URL", flagImageUrl);
-        i.putExtra("RANK", rank);
-        i.putExtra("COUNTRY", country);
-        i.putExtra("POPULATION", population);
+        i.putExtra(Constants.FLAG_URL_INTENT_STRING, flagImageUrl);
+        i.putExtra(Constants.RANK_INTENT_STRING, rank);
+        i.putExtra(Constants.COUNTRY_INTENT_STRING, country);
+        i.putExtra(Constants.POPULATION_INTENT_STRING, population);
         startActivity(i);
     }
 
     @Override
     public void onClick(View v) {
         if (!checkInternetAndRequest()) {
-            Toast.makeText(MainActivity.this, "Still No Internet Connection!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.toast_error_network), Toast.LENGTH_SHORT).show();
         }
     }
 }
